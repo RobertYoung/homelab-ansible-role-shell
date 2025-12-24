@@ -1,0 +1,5 @@
+set nocompatible
+syntax on
+set mouse=
+set background=dark
+colorscheme desert
