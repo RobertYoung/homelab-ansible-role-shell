@@ -1,0 +1,5 @@
+---
+shell_user: noxious
+shell_home_directory: "/home/{{ shell_user }}"
+shell_show_pretty_info: true
+shell_ohmyzsh_directory: "{{ shell_home_directory }}/.oh-my-zsh"
