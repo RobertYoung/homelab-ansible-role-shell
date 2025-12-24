@@ -102,5 +102,5 @@ source $ZSH/oh-my-zsh.sh
 
 {% if shell_show_pretty_info %}
 figlet -w 120 "{{ shell_hostname }}"
-hyfetch
+{{ shell_fetch_command }}
 {% endif %}
