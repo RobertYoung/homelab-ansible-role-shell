@@ -32,6 +32,19 @@
     depth: 1
   when: not ohmyzsh_directory_result.stat.exists
 
+- name: Update oh-my-zsh
+  become: true
+  become_user: "{{ shell_user }}"
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh
+    dest: "{{ shell_ohmyzsh_directory }}"
+    version: master
+    update: true
+    force: true
+  when:
+    - ohmyzsh_directory_result.stat.exists
+    - shell_ohmyzsh_update | bool
+
 - name: Create .zshrc
   become: true
   become_user: "{{ shell_user }}"
