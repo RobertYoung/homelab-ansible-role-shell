@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    shell_user: "root"
+    shell_home_directory: "/root"
+    shell_hostname: "test-host"
+    shell_show_pretty_info: true
+  roles:
+    - role: robertyoung.shell

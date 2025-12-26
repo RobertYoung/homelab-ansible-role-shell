@@ -1,11 +1,16 @@
 # homelab-ansible-role-shell
 
+[![Lint](https://github.com/RobertYoung/homelab-ansible-role-shell/actions/workflows/lint.yml/badge.svg)](https://github.com/RobertYoung/homelab-ansible-role-shell/actions/workflows/lint.yml)
+[![Release](https://github.com/RobertYoung/homelab-ansible-role-shell/actions/workflows/release.yml/badge.svg)](https://github.com/RobertYoung/homelab-ansible-role-shell/actions/workflows/release.yml)
+[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/RobertYoung/homelab-ansible-role-shell/badge)](https://securityscorecards.dev/viewer/?uri=github.com/RobertYoung/homelab-ansible-role-shell)
+
 Ansible role for configuring shell environments. Sets up zsh with oh-my-zsh, a custom theme, and vim configuration.
 
 ## Requirements
 
 - Ansible >= 2.15
-- Target: Ubuntu (focal, jammy, noble) or Debian (bullseye, bookworm)
+- Target: Ubuntu (focal, jammy, noble) or Debian (bullseye, bookworm, trixie)
 
 ## Role Variables
 
@@ -13,9 +18,11 @@ Ansible role for configuring shell environments. Sets up zsh with oh-my-zsh, a c
 |----------|---------|-------------|
 | `shell_user` | `noxious` | Target user for shell configuration |
 | `shell_home_directory` | `/home/{{ shell_user }}` | User's home directory |
-| `shell_show_pretty_info` | `true` | Display hostname (figlet) and system info (hyfetch) on shell startup |
+| `shell_show_pretty_info` | `true` | Display hostname (figlet) and system info on shell startup |
 | `shell_hostname` | **required** | Hostname to display on shell startup (required if `shell_show_pretty_info` is true) |
 | `shell_ohmyzsh_directory` | `{{ shell_home_directory }}/.oh-my-zsh` | Oh-My-Zsh installation directory |
+| `shell_ohmyzsh_update` | `false` | Update oh-my-zsh when running the role |
+| `shell_ohmyzsh_update_mode` | `disabled` | Oh-my-zsh update mode: `disabled`, `auto`, or `reminder` |
 
 ## Tags
 
@@ -63,11 +70,23 @@ ansible-playbook site.yml --tags "vim"
 ### Zsh
 - zsh shell with oh-my-zsh framework
 - Custom codespaces theme with git status integration
-- figlet and hyfetch for system info display
+- figlet and hyfetch/neofetch for system info display
 
 ### Vim
 - vim editor with dark theme (desert colorscheme)
 - Syntax highlighting enabled
+
+## Supply Chain Security
+
+This role uses SLSA Level 3 provenance for release artifacts. You can verify the provenance of downloaded releases using the GitHub CLI:
+
+```bash
+gh attestation verify shell-v1.0.0.tar.gz --owner RobertYoung
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 

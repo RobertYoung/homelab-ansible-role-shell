@@ -1,0 +1,106 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert zsh package is installed
+      ansible.builtin.assert:
+        that:
+          - "'zsh' in ansible_facts.packages"
+        fail_msg: "zsh package is not installed"
+        success_msg: "zsh package is installed"
+
+    - name: Assert vim package is installed
+      ansible.builtin.assert:
+        that:
+          - "'vim' in ansible_facts.packages"
+        fail_msg: "vim package is not installed"
+        success_msg: "vim package is installed"
+
+    - name: Assert figlet package is installed
+      ansible.builtin.assert:
+        that:
+          - "'figlet' in ansible_facts.packages"
+        fail_msg: "figlet package is not installed"
+        success_msg: "figlet package is installed"
+
+    - name: Check .zshrc exists
+      ansible.builtin.stat:
+        path: /root/.zshrc
+      register: zshrc_stat
+
+    - name: Assert .zshrc exists with correct permissions
+      ansible.builtin.assert:
+        that:
+          - zshrc_stat.stat.exists
+          - zshrc_stat.stat.mode == '0644'
+        fail_msg: ".zshrc does not exist or has wrong permissions"
+        success_msg: ".zshrc exists with correct permissions"
+
+    - name: Check .vimrc exists
+      ansible.builtin.stat:
+        path: /root/.vimrc
+      register: vimrc_stat
+
+    - name: Assert .vimrc exists with correct permissions
+      ansible.builtin.assert:
+        that:
+          - vimrc_stat.stat.exists
+          - vimrc_stat.stat.mode == '0644'
+        fail_msg: ".vimrc does not exist or has wrong permissions"
+        success_msg: ".vimrc exists with correct permissions"
+
+    - name: Check oh-my-zsh directory exists
+      ansible.builtin.stat:
+        path: /root/.oh-my-zsh
+      register: ohmyzsh_stat
+
+    - name: Assert oh-my-zsh directory exists
+      ansible.builtin.assert:
+        that:
+          - ohmyzsh_stat.stat.exists
+          - ohmyzsh_stat.stat.isdir
+        fail_msg: "oh-my-zsh directory does not exist"
+        success_msg: "oh-my-zsh directory exists"
+
+    - name: Check custom theme exists
+      ansible.builtin.stat:
+        path: /root/.oh-my-zsh/custom/themes/codespaces.zsh-theme
+      register: theme_stat
+
+    - name: Assert custom theme exists
+      ansible.builtin.assert:
+        that:
+          - theme_stat.stat.exists
+        fail_msg: "Custom zsh theme does not exist"
+        success_msg: "Custom zsh theme exists"
+
+    - name: Read .zshrc content
+      ansible.builtin.slurp:
+        src: /root/.zshrc
+      register: zshrc_content
+
+    - name: Assert .zshrc contains expected configuration
+      ansible.builtin.assert:
+        that:
+          - "'ZSH_THEME=\"codespaces\"' in (zshrc_content.content | b64decode)"
+          - "'test-host' in (zshrc_content.content | b64decode)"
+        fail_msg: ".zshrc does not contain expected configuration"
+        success_msg: ".zshrc contains correct configuration"
+
+    - name: Check user shell is zsh
+      ansible.builtin.command: getent passwd root
+      register: passwd_entry
+      changed_when: false
+
+    - name: Assert user shell is zsh
+      ansible.builtin.assert:
+        that:
+          - "'/usr/bin/zsh' in passwd_entry.stdout or '/bin/zsh' in passwd_entry.stdout"
+        fail_msg: "User shell is not set to zsh"
+        success_msg: "User shell is correctly set to zsh"
