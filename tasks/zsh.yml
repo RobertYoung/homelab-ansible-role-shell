@@ -62,3 +62,23 @@
     dest: "{{ shell_home_directory }}/.oh-my-zsh/custom/themes/codespaces.zsh-theme"
     owner: "{{ shell_user }}"
     mode: "0644"
+
+- name: Create neofetch config directory
+  become: true
+  become_user: "{{ shell_user }}"
+  ansible.builtin.file:
+    path: "{{ shell_home_directory }}/.config/neofetch"
+    state: directory
+    owner: "{{ shell_user }}"
+    mode: "0755"
+  when: shell_fetch_package == 'neofetch'
+
+- name: Copy neofetch config
+  become: true
+  become_user: "{{ shell_user }}"
+  ansible.builtin.copy:
+    src: neofetch.conf
+    dest: "{{ shell_home_directory }}/.config/neofetch/config.conf"
+    owner: "{{ shell_user }}"
+    mode: "0644"
+  when: shell_fetch_package == 'neofetch'
