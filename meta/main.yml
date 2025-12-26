@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: shell
+  namespace: robertyoung
   author: RobertYoung
   description: Ansible role for configuring shell environments with zsh, oh-my-zsh, and vim
   license: MIT
@@ -14,6 +16,7 @@ galaxy_info:
       versions:
         - bullseye
         - bookworm
+        - trixie
   galaxy_tags:
     - shell
     - zsh
