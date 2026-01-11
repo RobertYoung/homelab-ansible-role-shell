@@ -4,6 +4,7 @@
   ansible.builtin.apt:
     name:
       - zsh
+      - git
       - figlet
       - "{{ shell_fetch_package }}"
     state: present
@@ -82,6 +83,16 @@
     owner: "{{ shell_user }}"
     mode: "0644"
   when: shell_fetch_package == 'neofetch'
+
+- name: Create hyfetch config directory
+  become: true
+  become_user: "{{ shell_user }}"
+  ansible.builtin.file:
+    path: "{{ shell_home_directory }}/.config"
+    state: directory
+    owner: "{{ shell_user }}"
+    mode: "0755"
+  when: shell_fetch_package == 'hyfetch'
 
 - name: Copy hyfetch config
   become: true
